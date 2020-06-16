@@ -124,6 +124,15 @@ public class PlayerControls : MonoBehaviour
 
     private void SlowDown()
     {
-        GetComponent<Rigidbody>().velocity = GetComponent<Rigidbody>().velocity.normalized * GetComponent<Rigidbody>().velocity.magnitude * (0.5f/Time.deltaTime);
+        if (GetComponent<Rigidbody>().velocity.magnitude - acc * Time.deltaTime> 0)
+        {
+            GetComponent<Rigidbody>().velocity = GetComponent<Rigidbody>().velocity.normalized * (GetComponent<Rigidbody>().velocity.magnitude - acc * Time.deltaTime);
+        }
+        else
+        {
+            GetComponent<Rigidbody>().velocity = GetComponent<Rigidbody>().velocity.normalized * 0;
+
+        }
+
     }
 }

@@ -340,7 +340,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 10
-  acc: 200
+  acc: 80
   vSens: 60
   hSens: 60
   camera: {fileID: 963194225}
