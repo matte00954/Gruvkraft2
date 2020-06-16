@@ -4,42 +4,56 @@ using UnityEngine;
 
 public class PlayerControls : MonoBehaviour
 {
+    [Header("Maximum walkspeed")]
     public float moveSpeed;
+    [Header("Walking acceleration")]
     public float acc;
+    [Header("Horisontal and vertical look sensitivity")]
     public float vSens;
     public float hSens;
     public GameObject camera;
 
+    private Rigidbody rb;
+
     private float walkDir;
+
     private int xDir;
     private int yDir;
+
     private bool canMove;
-    private Rigidbody rb;
+    private bool grounded;
+    private bool accelerating;
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        grounded = false;
     }
 
     void Update()
     {
-        Look();
-        if (canMove)
+        //tillfällig if sats
+        if (true)
         {
-            Move();
+            Look();
+            if ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D)) && grounded)
+            {
+                //accelerating sätts här tillfälligt
+                accelerating = true;
+                Move();
+                LimitVelocity();
+            }
+            else
+            {
+                accelerating = false;
+            }
         }
-        else
+
+        if (!accelerating && grounded)
         {
             SlowDown();
         }
-        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
-        {
-            canMove = true;
-        }
-        else
-        {
-            canMove = false;
-        }
-        LimitVelocity();
+        Debug.Log(grounded);
+
     }
     private void Look()
     {
@@ -68,7 +82,7 @@ public class PlayerControls : MonoBehaviour
             xDir++;
         }
         GetDir();
-        GetComponent<Rigidbody>().AddForce(transform.TransformDirection(new Vector3(Mathf.Cos(Mathf.Deg2Rad * walkDir), 0, Mathf.Sin(Mathf.Deg2Rad * walkDir))) * acc);
+        rb.AddForce(transform.TransformDirection(new Vector3(Mathf.Cos(Mathf.Deg2Rad * walkDir), 0, Mathf.Sin(Mathf.Deg2Rad * walkDir))) * acc);
     }
 
     private void GetDir()
@@ -109,30 +123,52 @@ public class PlayerControls : MonoBehaviour
 
     private void LimitVelocity()
     {
-        if (GetComponent<Rigidbody>().velocity.magnitude > moveSpeed)
+        if (rb.velocity.magnitude > moveSpeed)
         {
-            if (GetComponent<Rigidbody>().velocity.magnitude * 0.8f * Time.deltaTime > moveSpeed)
+            if (rb.velocity.magnitude * 0.8f * Time.deltaTime > moveSpeed)
             {
-                GetComponent<Rigidbody>().velocity = GetComponent<Rigidbody>().velocity.normalized * GetComponent<Rigidbody>().velocity.magnitude * 0.8f * Time.deltaTime;
+                rb.velocity = rb.velocity.normalized * rb.velocity.magnitude * 0.8f * Time.deltaTime;
             }
             else
             {
-                GetComponent<Rigidbody>().velocity = GetComponent<Rigidbody>().velocity.normalized * moveSpeed;
+                rb.velocity = rb.velocity.normalized * moveSpeed;
             }
         }
     }
 
     private void SlowDown()
     {
-        if (GetComponent<Rigidbody>().velocity.magnitude - acc * Time.deltaTime> 0)
+        if (rb.velocity.magnitude - acc * Time.deltaTime> 0)
         {
-            GetComponent<Rigidbody>().velocity = GetComponent<Rigidbody>().velocity.normalized * (GetComponent<Rigidbody>().velocity.magnitude - acc * Time.deltaTime);
+            rb.velocity = rb.velocity.normalized * (rb.velocity.magnitude - acc * Time.deltaTime);
         }
         else
         {
-            GetComponent<Rigidbody>().velocity = GetComponent<Rigidbody>().velocity.normalized * 0;
+            rb.velocity = rb.velocity.normalized * 0;
 
         }
 
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Floor"))
+        {
+            grounded = true;
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Floor") == true)
+        {
+        }
+    }
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Floor") == true)
+        {
+            grounded = false;
+        }
     }
 }
