@@ -6,14 +6,20 @@ public class PlayerControls : MonoBehaviour
 {
     [Header("Maximum walkspeed")]
     public float moveSpeed;
+
     [Header("Walking acceleration")]
     public float acc;
+
     [Header("Horisontal and vertical look sensitivity")]
     public float vSens;
     public float hSens;
     public GameObject camera;
 
+    [Header("Raycast variables")]
+    public float maxHitDistance;
+
     private Rigidbody rb;
+    private RaycastHit hit;
 
     private float walkDir;
 
@@ -50,7 +56,7 @@ public class PlayerControls : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F)) // Press F to pay respects
         {
-
+            ObjectInteraction();
         }
 
         if (!accelerating && grounded)
@@ -176,4 +182,20 @@ public class PlayerControls : MonoBehaviour
             grounded = false;
         }
     }
+
+    private void ObjectInteraction()
+    {
+        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, maxHitDistance))
+        {
+            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
+            Debug.Log("Did Hit");
+        }
+        else
+        {
+            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 1000, Color.white);
+            Debug.Log("Did not Hit");
+        }
+    }
+
+
 }
