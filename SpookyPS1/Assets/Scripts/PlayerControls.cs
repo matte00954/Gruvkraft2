@@ -63,8 +63,6 @@ public class PlayerControls : MonoBehaviour
         {
             SlowDown();
         }
-        Debug.Log(grounded);
-
     }
     private void Look()
     {
@@ -196,6 +194,4 @@ public class PlayerControls : MonoBehaviour
             Debug.Log("Did not Hit");
         }
     }
-
-
 }
