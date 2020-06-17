@@ -16,7 +16,9 @@ public class PlayerControls : MonoBehaviour
     public GameObject camera;
 
     [Header("Raycast variables")]
-    public float maxHitDistance;
+    public float maxObjectInteractionDistance;
+    public LayerMask objectMask;
+    //layerMask som man kan lägga på objekt som man kan interagera med
 
     private Rigidbody rb;
     private RaycastHit hit;
@@ -183,7 +185,7 @@ public class PlayerControls : MonoBehaviour
 
     private void ObjectInteraction()
     {
-        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, maxHitDistance))
+        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, maxObjectInteractionDistance /*objectMask*/)) //OBS objectMask ska användas senare!!!
         {
             Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
             Debug.Log("Did Hit");
