@@ -344,6 +344,10 @@ MonoBehaviour:
   vSens: 60
   hSens: 60
   camera: {fileID: 963194225}
+  maxObjectInteractionDistance: 10
+  objectMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!54 &724712918
 Rigidbody:
   m_ObjectHideFlags: 0
