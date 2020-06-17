@@ -48,6 +48,11 @@ public class PlayerControls : MonoBehaviour
             }
         }
 
+        if (Input.GetKeyDown(KeyCode.F)) // Press F to pay respects
+        {
+
+        }
+
         if (!accelerating && grounded)
         {
             SlowDown();
