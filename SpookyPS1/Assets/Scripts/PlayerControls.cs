@@ -4,42 +4,67 @@ using UnityEngine;
 
 public class PlayerControls : MonoBehaviour
 {
+    [Header("Maximum walkspeed")]
     public float moveSpeed;
+
+    [Header("Walking acceleration")]
     public float acc;
+
+    [Header("Horisontal and vertical look sensitivity")]
     public float vSens;
     public float hSens;
     public GameObject camera;
 
+    [Header("Raycast variables")]
+    public float maxObjectInteractionDistance;
+    public LayerMask objectMask;
+    //layerMask som man kan lägga på objekt som man kan interagera med
+
+    private Rigidbody rb;
+    private RaycastHit hit;
+
     private float walkDir;
+
     private int xDir;
     private int yDir;
+
     private bool canMove;
-    private Rigidbody rb;
+    private bool grounded;
+    private bool accelerating;
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        grounded = false;
     }
 
     void Update()
     {
-        Look();
-        if (canMove)
+        //tillfällig if sats
+        if (true)
         {
-            Move();
+            Look();
+            if ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D)) && grounded)
+            {
+                //accelerating sätts här tillfälligt
+                accelerating = true;
+                Move();
+                LimitVelocity();
+            }
+            else
+            {
+                accelerating = false;
+            }
         }
-        else
+
+        if (Input.GetKeyDown(KeyCode.F)) // Press F to pay respects
+        {
+            ObjectInteraction();
+        }
+
+        if (!accelerating && grounded)
         {
             SlowDown();
         }
-        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
-        {
-            canMove = true;
-        }
-        else
-        {
-            canMove = false;
-        }
-        LimitVelocity();
     }
     private void Look()
     {
@@ -68,7 +93,7 @@ public class PlayerControls : MonoBehaviour
             xDir++;
         }
         GetDir();
-        GetComponent<Rigidbody>().AddForce(transform.TransformDirection(new Vector3(Mathf.Cos(Mathf.Deg2Rad * walkDir), 0, Mathf.Sin(Mathf.Deg2Rad * walkDir))) * acc);
+        rb.AddForce(transform.TransformDirection(new Vector3(Mathf.Cos(Mathf.Deg2Rad * walkDir), 0, Mathf.Sin(Mathf.Deg2Rad * walkDir))) * acc);
     }
 
     private void GetDir()
@@ -109,30 +134,66 @@ public class PlayerControls : MonoBehaviour
 
     private void LimitVelocity()
     {
-        if (GetComponent<Rigidbody>().velocity.magnitude > moveSpeed)
+        if (rb.velocity.magnitude > moveSpeed)
         {
-            if (GetComponent<Rigidbody>().velocity.magnitude * 0.8f * Time.deltaTime > moveSpeed)
+            if (rb.velocity.magnitude * 0.8f * Time.deltaTime > moveSpeed)
             {
-                GetComponent<Rigidbody>().velocity = GetComponent<Rigidbody>().velocity.normalized * GetComponent<Rigidbody>().velocity.magnitude * 0.8f * Time.deltaTime;
+                rb.velocity = rb.velocity.normalized * rb.velocity.magnitude * 0.8f * Time.deltaTime;
             }
             else
             {
-                GetComponent<Rigidbody>().velocity = GetComponent<Rigidbody>().velocity.normalized * moveSpeed;
+                rb.velocity = rb.velocity.normalized * moveSpeed;
             }
         }
     }
 
     private void SlowDown()
     {
-        if (GetComponent<Rigidbody>().velocity.magnitude - acc * Time.deltaTime> 0)
+        if (rb.velocity.magnitude - acc * Time.deltaTime> 0)
         {
-            GetComponent<Rigidbody>().velocity = GetComponent<Rigidbody>().velocity.normalized * (GetComponent<Rigidbody>().velocity.magnitude - acc * Time.deltaTime);
+            rb.velocity = rb.velocity.normalized * (rb.velocity.magnitude - acc * Time.deltaTime);
         }
         else
         {
-            GetComponent<Rigidbody>().velocity = GetComponent<Rigidbody>().velocity.normalized * 0;
+            rb.velocity = rb.velocity.normalized * 0;
 
         }
 
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Floor"))
+        {
+            grounded = true;
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Floor") == true)
+        {
+        }
+    }
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Floor") == true)
+        {
+            grounded = false;
+        }
+    }
+
+    private void ObjectInteraction()
+    {
+        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, maxObjectInteractionDistance /*objectMask*/)) //OBS objectMask ska användas senare!!!
+        {
+            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
+            Debug.Log("Did Hit");
+        }
+        else
+        {
+            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 1000, Color.white);
+            Debug.Log("Did not Hit");
+        }
     }
 }
