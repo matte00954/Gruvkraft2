@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class PlayerControls : MonoBehaviour
 {
+    public GameObject camera;
+    public GameObject impact;
+
     [Header("Maximum walkspeed")]
     public float moveSpeed;
 
@@ -13,15 +16,16 @@ public class PlayerControls : MonoBehaviour
     [Header("Horisontal and vertical look sensitivity")]
     public float vSens;
     public float hSens;
-    public GameObject camera;
 
     [Header("Raycast variables")]
     public float maxObjectInteractionDistance;
     public LayerMask objectMask;
     //layerMask som man kan lägga på objekt som man kan interagera med
 
+    [Header("Shooting Variables")]
+    public float range;
+
     private Rigidbody rb;
-    private RaycastHit hit;
 
     private float walkDir;
 
@@ -59,6 +63,11 @@ public class PlayerControls : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F)) // Press F to pay respects
         {
             ObjectInteraction();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Mouse0)) // Skjut
+        {
+            Shot();
         }
 
         if (!accelerating && grounded)
@@ -185,6 +194,7 @@ public class PlayerControls : MonoBehaviour
 
     private void ObjectInteraction()
     {
+        RaycastHit hit;
         if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, maxObjectInteractionDistance /*objectMask*/)) //OBS objectMask ska användas senare!!!
         {
             Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
@@ -194,6 +204,16 @@ public class PlayerControls : MonoBehaviour
         {
             Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 1000, Color.white);
             Debug.Log("Did not Hit");
+        }
+    }
+
+    private void Shot()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(camera.transform.position, camera.transform.forward, out hit, range))
+        {
+            Debug.DrawRay(camera.transform.position, camera.transform.forward * hit.distance, Color.yellow);
+            Instantiate(impact, hit.point, hit.transform.rotation);
         }
     }
 }
