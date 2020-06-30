@@ -35,6 +35,7 @@ public class PlayerControls : MonoBehaviour
     private bool canMove;
     private bool grounded;
     private bool accelerating;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
