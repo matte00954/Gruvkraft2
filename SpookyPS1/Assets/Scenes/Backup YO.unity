@@ -9100,15 +9100,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b5f0e3fd55f70c439321d9c80565ca8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  camera: {fileID: 963194225}
+  impact: {fileID: 6022004142374481287, guid: 91ef9bde80104544e8eaef83c37146e4, type: 3}
   moveSpeed: 10
   acc: 80
   vSens: 60
   hSens: 60
-  camera: {fileID: 963194225}
   maxObjectInteractionDistance: 0
   objectMask:
     serializedVersion: 2
     m_Bits: 0
+  range: 0
 --- !u!54 &724712918
 Rigidbody:
   m_ObjectHideFlags: 0
