@@ -11,7 +11,7 @@ public class HumanEnemy : MonoBehaviour
     public float rotationSpeedMultiplier;
 
     //private bool hearsPlayer;
-    private bool seesPlayer;
+    private bool isChasing;
     private bool patrolAssigned;
 
     [Header("Patrol")]
@@ -19,6 +19,9 @@ public class HumanEnemy : MonoBehaviour
     public GameObject patrolPrefab;
     private int currentPatrolPos;
     private bool reachedPatrolPos;
+
+    [Header("Search")]
+    private bool isSearching;
 
     NavMeshAgent agent;
     Transform target;
@@ -38,7 +41,6 @@ public class HumanEnemy : MonoBehaviour
         {
             Instantiate(patrolPrefab, patrolRoutes[i]); //skapar spelobjekt för checkpoints
         }
-
     }
 
     // Update is called once per frame
@@ -75,11 +77,6 @@ public class HumanEnemy : MonoBehaviour
     }
 
 
-    private void LateUpdate()
-    {
-        PatrolRoute(); //tveksamt om jag vill ha detta i en update metod
-    }
-
     private void FaceTarget()
     {
         Vector3 direction = (target.position - transform.position).normalized;
@@ -103,27 +100,57 @@ public class HumanEnemy : MonoBehaviour
 
             if (eyes.collider.tag.Equals("Player"))
             {
-                seesPlayer = true;
-
+                Chasing(distance);
+                isSearching = false;
                 Debug.Log("Player Spotted!");
-
-                agent.SetDestination(target.position);
-
             }
 
-            if (distance <= agent.stoppingDistance)
+            if(!eyes.collider.tag.Equals("Player"))
             {
-                Attack();
-                FaceTarget();
-            }
-            else
-            {
-                seesPlayer = false;
+                if (!isSearching)
+                {
+                    Searching();
+                }
             }
         }
     }
 
-    private void PatrolRoute()
+    private void Searching()
+    {
+
+        isSearching = true;
+
+        if (isSearching)
+        {
+            StartCoroutine(SearchCoroutine());
+        }
+    }
+
+
+    private IEnumerator SearchCoroutine()
+    {
+        yield return new WaitForSeconds(2f);
+        agent.SetDestination(VectorSearchRandomiser());
+
+        if (isSearching)
+        {
+            Searching();
+        }
+    }
+
+    private Vector3 VectorSearchRandomiser()
+    {
+        float minRandom = -25f;
+        float maxRandom = 25f;
+
+        return new Vector3(this.gameObject.transform.position.x +
+                Random.Range(minRandom, maxRandom),
+                this.gameObject.transform.position.y,
+                this.gameObject.transform.position.z +
+                Random.Range(minRandom, maxRandom));
+    }
+
+    private void PatrolRoute() //OBS denna anvämds ej
     {
         if (reachedPatrolPos) //agent reach patrol pos
         {
@@ -148,7 +175,6 @@ public class HumanEnemy : MonoBehaviour
             {
                 patrolAssigned = true;
                 Debug.Log("Patrol position assigned");
-                agent.SetDestination(patrolRoutes[currentPatrolPos].gameObject.transform.position);
             }
         }
     }
@@ -159,14 +185,24 @@ public class HumanEnemy : MonoBehaviour
         FaceTarget();
     }
 
-    private void Chasing() //min ide är att denna är igång i update OM fienden kan se spelaren det kommer behövas nån slags stealth state för spelaren
+    private void Chasing(float distance) //min ide är att denna är igång i update OM fienden kan se spelaren det kommer behövas nån slags stealth state för spelaren
     {
+        Debug.Log("Enemy is chasing!");
+        agent.SetDestination(target.position);
 
+        FaceTarget();
+
+        if (distance <= agent.stoppingDistance)
+        {
+            Debug.Log("Enemy can attack!");
+            Attack();
+            FaceTarget();
+        }
     }
 
     private void Attack() //om spelaren är tillräckligt nära så kommer fieden då attackera
     {
-
+        Debug.Log("Enemy attacks!");
     }
 
 
