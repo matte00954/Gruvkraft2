@@ -1153,12 +1153,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lookRange: 100
   hearingRadius: 50
+  enemyDangerZone: 15
   rotationSpeedMultiplier: 20
   patrolRoutes:
   - {fileID: 575138976}
   - {fileID: 775036218}
   patrolPrefab: {fileID: 1249782703394514125, guid: b9fb292d4fcaa104cb67edd26687f9ab,
     type: 3}
+  isSearching: 0
+  playerSpotted: 0
+  chasingPlayer: 0
 --- !u!1 &2034240459
 GameObject:
   m_ObjectHideFlags: 0

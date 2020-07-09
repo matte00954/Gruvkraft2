@@ -8,10 +8,9 @@ public class HumanEnemy : MonoBehaviour
     [Header("Enemy radius/ranges")]
     public float lookRange; //hur långt fienden kan se
     public float hearingRadius; //hur långt fienden kan "höra"
+    public float enemyDangerZone; //om spelaren är så här nära så blir man konsant jagad
     public float rotationSpeedMultiplier;
 
-    //private bool hearsPlayer;
-    private bool isChasing;
     private bool patrolAssigned;
 
     [Header("Patrol")]
@@ -21,7 +20,9 @@ public class HumanEnemy : MonoBehaviour
     private bool reachedPatrolPos;
 
     [Header("Search")]
-    private bool isSearching;
+    public bool isSearching;
+    public bool playerSpotted;
+    public bool chasingPlayer;
 
     NavMeshAgent agent;
     Transform target;
@@ -54,9 +55,15 @@ public class HumanEnemy : MonoBehaviour
         float distance = Vector3.Distance(target.position, transform.position); //distansen mellan spelare och fiende
         Looking(distance);
 
-        if (distance <= hearingRadius) //om spelaren är i fiendens radius
+        if (distance <= hearingRadius) //om spelaren är i fiendens hörsel radius
         {
             SimulateHearing();
+        }
+
+        if (distance <= enemyDangerZone) //om spelaren är för nära fienden 
+        {
+            Debug.Log("Player has entered an enemies danger zone!");
+            chasingPlayer = true;
         }
 
         if (Input.GetKeyDown(KeyCode.I))
@@ -98,17 +105,19 @@ public class HumanEnemy : MonoBehaviour
         if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out eyes, lookRange, layerMask))
         {
 
-            if (eyes.collider.tag.Equals("Player"))
+            if (eyes.collider.tag.Equals("Player") || chasingPlayer)
             {
                 Chasing(distance);
                 isSearching = false;
                 Debug.Log("Player Spotted!");
+                playerSpotted = true;
             }
 
-            if(!eyes.collider.tag.Equals("Player"))
+            if(!eyes.collider.tag.Equals("Player") || (!chasingPlayer))
             {
                 if (!isSearching)
                 {
+                    playerSpotted = false;
                     Searching();
                 }
             }
@@ -135,6 +144,16 @@ public class HumanEnemy : MonoBehaviour
         if (isSearching)
         {
             Searching();
+        }
+    }
+
+    private IEnumerator EndingChase()
+    {
+        yield return new WaitForSeconds(5f);
+
+        if (!playerSpotted)
+        {
+            chasingPlayer = false;
         }
     }
 
@@ -187,6 +206,7 @@ public class HumanEnemy : MonoBehaviour
 
     private void Chasing(float distance) //min ide är att denna är igång i update OM fienden kan se spelaren det kommer behövas nån slags stealth state för spelaren
     {
+        chasingPlayer = true;
         Debug.Log("Enemy is chasing!");
         agent.SetDestination(target.position);
 
@@ -197,6 +217,11 @@ public class HumanEnemy : MonoBehaviour
             Debug.Log("Enemy can attack!");
             Attack();
             FaceTarget();
+        }
+
+        if (!playerSpotted)
+        {
+            StartCoroutine(EndingChase());
         }
     }
 
@@ -211,5 +236,6 @@ public class HumanEnemy : MonoBehaviour
      * Ta bort y värden och bara kolla på x och z värden? eller tänk om hela patrull lösningen?
      * Om spelaren hörs, så bör det skapas en zon likt hearing zonen som man måste gå bort från för att fly från fienden
      * Man skulle kunna randomisa positions värden nära spelaren för att få fienden att leta, om man blir hittad av en fiende. Kanske om man förbestämmer flera positioner innan och sedan så väljer fienden de som är närmast?
+     * fienden bör jaga även fast den inte direkt ser spelaren, detta är inte implementerat
     */
 }
