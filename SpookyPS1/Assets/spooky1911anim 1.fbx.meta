@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 133db180804629f43a6c61245aa723df
+guid: cf358c725da2a214f96be3f9cf69a6cb
 ModelImporter:
   serializedVersion: 19300
   internalIDToNameTable:
@@ -10,14 +10,26 @@ ModelImporter:
       74: 929889476490064824
     second: basicRig|Idle
   - first:
-      74: -2699668922981476074
-    second: basicRig|ReloadEmpty
+      74: -8858347104844846156
+    second: basicRig|LoadCock
+  - first:
+      74: -1510824483592220920
+    second: basicRig|LoadRelease
   - first:
       74: -6015450674176929632
     second: basicRig|ReloadEmpty.001
   - first:
+      74: -8094686803407964882
+    second: basicRig|ReloadEmpty.002
+  - first:
+      74: 8711075565838741521
+    second: basicRig|Shot1
+  - first:
       74: -3683592162142456840
     second: basicRig|Unload
+  - first:
+      74: -2699668922981476074
+    second: basicRig|ReloadEmpty
   externalObjects: {}
   materials:
     materialImportMode: 1
@@ -38,7 +50,7 @@ ModelImporter:
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
     importConstraints: 0
-    animationCompression: 1
+    animationCompression: 0
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5

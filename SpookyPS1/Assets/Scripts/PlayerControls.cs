@@ -13,6 +13,9 @@ public class PlayerControls : MonoBehaviour
     [Header("Walking acceleration")]
     public float acc;
 
+    [Header("Jumpforce")]
+    public float jumpForce;
+
     [Header("Horisontal and vertical look sensitivity")]
     public float vSens;
     public float hSens;
@@ -60,7 +63,10 @@ public class PlayerControls : MonoBehaviour
                 accelerating = false;
             }
         }
-
+        if (Input.GetKey(KeyCode.Space))
+        {
+            Jump();
+        }
         if (Input.GetKeyDown(KeyCode.F)) // Press F to pay respects
         {
             ObjectInteraction();
@@ -155,6 +161,11 @@ public class PlayerControls : MonoBehaviour
                 rb.velocity = rb.velocity.normalized * moveSpeed;
             }
         }
+    }
+
+    private void Jump()
+    {
+        rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
     }
 
     private void SlowDown()
