@@ -39,8 +39,13 @@ public class PlayerControls : MonoBehaviour
     private bool grounded;
     private bool accelerating;
 
+    private Animator anim;
+    private Animator anim2;
+
     void Start()
     {
+        anim = GameObject.Find("Player/Camera/Camera/ViewModel/spooky1911anim 1").GetComponent<Animator>();
+        anim2 = GameObject.Find("Player/Camera/Camera/ViewModel").GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
         grounded = false;
     }
@@ -57,10 +62,12 @@ public class PlayerControls : MonoBehaviour
                 accelerating = true;
                 Move();
                 LimitVelocity();
+                anim2.SetBool("Walking", true);
             }
             else
             {
                 accelerating = false;
+                anim2.SetBool("Walking", false);
             }
         }
         if (Input.GetKey(KeyCode.Space))
@@ -221,11 +228,14 @@ public class PlayerControls : MonoBehaviour
 
     private void Shot()
     {
+        anim.Play("Fire");
         RaycastHit hit;
         if (Physics.Raycast(camera.transform.position, camera.transform.forward, out hit, range))
         {
             Debug.DrawRay(camera.transform.position, camera.transform.forward * hit.distance, Color.yellow);
-            Instantiate(impact, hit.point, hit.transform.rotation);
+            GameObject dust;
+            dust= Instantiate(impact, hit.point, Quaternion.FromToRotation(Vector3.forward, hit.normal));
+            dust.GetComponent<ParticleSystem>().Play();
         }
     }
 }

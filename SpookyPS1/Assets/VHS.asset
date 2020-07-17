@@ -27,15 +27,15 @@ MonoBehaviour:
     value: {x: 0.5, y: 0.5}
   intensity:
     overrideState: 1
-    value: 0.171
+    value: 0.635
   smoothness:
     overrideState: 0
     value: 0.2
   roundness:
-    overrideState: 0
-    value: 1
+    overrideState: 1
+    value: 0.53
   rounded:
-    overrideState: 0
+    overrideState: 1
     value: 0
   mask:
     overrideState: 0
@@ -69,7 +69,7 @@ MonoBehaviour:
     value: 1
   fastMode:
     overrideState: 0
-    value: 0
+    value: 1
 --- !u!114 &-3711448834706140933
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -87,17 +87,17 @@ MonoBehaviour:
     overrideState: 1
     value: 1
   colored:
-    overrideState: 0
-    value: 1
+    overrideState: 1
+    value: 0
   intensity:
     overrideState: 1
-    value: 1
+    value: 0.252
   size:
-    overrideState: 0
-    value: 1
+    overrideState: 1
+    value: 1.9
   lumContrib:
     overrideState: 0
-    value: 0.8
+    value: 1
 --- !u!114 &-776406105487178457
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -110,7 +110,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 556797029e73b2347956b6579e77e05b, type: 3}
   m_Name: DepthOfField
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   enabled:
     overrideState: 1
     value: 1
@@ -213,35 +213,35 @@ MonoBehaviour:
     value: 1
   intensity:
     overrideState: 1
-    value: 3.37
+    value: 0.06
   threshold:
     overrideState: 1
-    value: 0.9
+    value: 0.3
   softKnee:
-    overrideState: 0
-    value: 0.5
+    overrideState: 1
+    value: 0
   clamp:
     overrideState: 0
-    value: 65472
+    value: 65492.9
   diffusion:
-    overrideState: 0
-    value: 7
+    overrideState: 1
+    value: 5.92
   anamorphicRatio:
     overrideState: 0
-    value: 0
+    value: -0.09
   color:
     overrideState: 0
     value: {r: 1, g: 1, b: 1, a: 1}
   fastMode:
     overrideState: 0
-    value: 0
+    value: 1
   dirtTexture:
     overrideState: 1
     value: {fileID: 2800000, guid: 21bc7a3ffee70c84784b504a03ea76ea, type: 3}
     defaultState: 1
   dirtIntensity:
     overrideState: 1
-    value: 26.43
+    value: 48.66
 --- !u!114 &3802972979419239744
 MonoBehaviour:
   m_ObjectHideFlags: 3
