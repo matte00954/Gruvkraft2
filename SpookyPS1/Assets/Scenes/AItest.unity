@@ -714,6 +714,7 @@ MonoBehaviour:
   impact: {fileID: 6022004142374481287, guid: 91ef9bde80104544e8eaef83c37146e4, type: 3}
   moveSpeed: 15
   acc: 100
+  jumpForce: 10
   vSens: 120
   hSens: 120
   maxObjectInteractionDistance: 0
